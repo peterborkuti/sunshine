@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -18,13 +19,13 @@ import java.net.URL;
 public class OpenMapConnection {
     public static final String TAG = "BP";
 
-    public void start(Activity activity, String url) {
+    public void start(Activity activity, Uri url) {
         ConnectivityManager connMgr = (ConnectivityManager)
                 activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             Log.d(TAG,"start GetOpenMap");
-            new GetOpenMapData().execute(ConnectionUtil.getUrl(url));
+            new GetOpenMapData().execute(url);
         } else {
             //textView.setText("No network connection available.");
             Log.e(TAG, "No network connection available.");
@@ -32,14 +33,14 @@ public class OpenMapConnection {
 
     }
 
-    private class GetOpenMapData extends AsyncTask<String, Void, String> {
+    private class GetOpenMapData extends AsyncTask<Uri, Void, String> {
         @Override
-        protected String doInBackground(String... urls) {
-            Log.d("BP", "url: " + urls[0]);
+        protected String doInBackground(Uri... uris) {
+            Log.d("BP", "url: " + uris[0]);
 
             // params comes from the execute() call: params[0] is the url.
             try {
-                return ConnectionUtil.getResponse(urls[0]);
+                return ConnectionUtil.getResponse(uris[0]);
             } catch (IOException e) {
                 return "Unable to retrieve web page. URL may be invalid.";
             }

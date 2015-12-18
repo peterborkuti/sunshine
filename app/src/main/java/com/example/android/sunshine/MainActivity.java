@@ -29,9 +29,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        OpenMapConnection omConn = new OpenMapConnection();
-        Log.d("BP", "start connection");
-        omConn.start(this, "http://api.openweathermap.org/data/2.5/forecast/city?id=524901");
+
 
     }
 

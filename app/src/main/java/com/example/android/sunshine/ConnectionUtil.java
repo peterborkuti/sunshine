@@ -1,5 +1,6 @@
 package com.example.android.sunshine;
 
+import android.net.Uri;
 import android.util.Log;
 
 import java.io.IOException;
@@ -18,11 +19,7 @@ public class ConnectionUtil {
     public final static int READ_TIMEOUT = 10000; // ms
     public final static int CONN_TIMEOUT = 15000; // ms
     public final static int RESPONSE_BUFFER_LEN = 100; // ms
-    public final static String API_KEY = "ae15f9ec3f753942f40372a33f314476";
 
-    public static String getUrl(String url) {
-        return url + "&APPID=" + API_KEY ;
-    }
 
     // Reads an InputStream and converts it to a String.
     private static String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
@@ -41,13 +38,14 @@ public class ConnectionUtil {
         return output.toString();
     }
 
-    public static String getResponse(String myUrl) throws IOException {
+    public static String getResponse(Uri uri) throws IOException {
         String contentAsString = "";
 
         InputStream is = null;
 
         try {
-            URL url = new URL(myUrl);
+            Log.d("BP", "getResponse:" + uri.toString());
+            URL url = new URL(uri.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(READ_TIMEOUT);
             conn.setConnectTimeout(CONN_TIMEOUT);

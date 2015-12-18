@@ -1,5 +1,6 @@
 package com.example.android.sunshine;
 
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,7 @@ public class MainActivityFragment extends Fragment {
     LayoutInflater inflater;
 
     public MainActivityFragment() {
+        setHasOptionsMenu (true);
     }
 
     @Override
@@ -68,6 +70,12 @@ public class MainActivityFragment extends Fragment {
         if (id == R.id.action_refresh)
         {
             Log.d(TAG, "Refresh menu selected");
+            OpenMapConnection omConn = new OpenMapConnection();
+            Log.d("BP", "start connection");
+            Uri url = OpenWeatherAPIURL.getURL("1158", "hu");
+            //"http://api.openweathermap.org/data/2.5/forecast/city?id=524901"
+            omConn.start(getActivity(), url);
+
             return true;
         }
 
