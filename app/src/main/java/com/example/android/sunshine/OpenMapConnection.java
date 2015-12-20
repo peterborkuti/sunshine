@@ -29,14 +29,14 @@ public class OpenMapConnection {
     public static final String TAG = "BP";
     private ArrayAdapter<String> arrAdapter;
 
-    public void start(Activity activity, ArrayAdapter<String> arrayAdapter, Uri url) {
+    public void start(Activity activity, ArrayAdapter<String> arrayAdapter, List<TSunshine> daysData, Uri url) {
         arrAdapter = arrayAdapter;
         ConnectivityManager connMgr = (ConnectivityManager)
                 activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             Log.d(TAG,"start GetOpenMap");
-            new GetOpenMapData().execute(url);
+            new GetOpenMapData(daysData).execute(url);
         } else {
             //textView.setText("No network connection available.");
             Log.e(TAG, "No network connection available.");
@@ -45,6 +45,17 @@ public class OpenMapConnection {
     }
 
     private class GetOpenMapData extends AsyncTask<Uri, Void, List<String>> {
+        List<TSunshine> daysDataTemp = new ArrayList<TSunshine>();
+        final List<TSunshine> daysData;
+
+        private GetOpenMapData() {
+            daysData = null;
+        }
+
+        public GetOpenMapData(final List<TSunshine> daysData) {
+            this.daysData = daysData;
+        }
+
         @Override
         protected List<String> doInBackground(Uri... uris) {
             Log.d("BP", "url: " + uris[0]);
@@ -54,7 +65,11 @@ public class OpenMapConnection {
             try {
                 String response = ConnectionUtil.getResponse(uris[0]);
 
+
                 TSunshine[] dataArr = OpenWeatherParser.getWeatherForecast(response);
+                daysDataTemp.clear();
+                daysDataTemp.addAll(Arrays.asList(dataArr));
+
                 for (TSunshine data: dataArr) {
                     strArr.add(data.toString());
                 }
@@ -71,6 +86,8 @@ public class OpenMapConnection {
         protected void onPostExecute(List<String> result) {
             arrAdapter.clear();
             arrAdapter.addAll(result);
+            daysData.clear();
+            daysData.addAll(daysDataTemp);
             Log.d("BP", "Adapter was set with " + result);
             //textView.setText(result);
         }

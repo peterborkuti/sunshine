@@ -36,6 +36,11 @@ public class TSunshine {
     private Double minTemp;
     private String icon;
     private String description;
+
+    public String getJson() throws JSONException {
+        return json.toString(2);
+    }
+
     private final JSONObject json;
 
     private TSunshine() throws JSONException {

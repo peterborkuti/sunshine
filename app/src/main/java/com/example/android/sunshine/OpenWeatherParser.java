@@ -51,23 +51,10 @@ public class OpenWeatherParser {
         return obj;
     }
 
-    public static TSunshine getWeatherForDay(JSONObject jDay) throws JSONException {
-        JSONObject jTemp = (JSONObject)jDay.get("temp");
-        Double max = jTemp.getDouble("max");
-        Double min = jTemp.getDouble("min");
-        JSONObject jWeather = jDay.getJSONArray("weather").getJSONObject(0);
-        String description = jWeather.getString("description");
-        String icon = jWeather.getString("icon");
-
-        long dt = jDay.getLong("dt");
-
-        return new TSunshine(dt, max, min, icon, description);
-    }
-
     public static TSunshine[] getWeatherForecastFromArray(JSONArray jsonArray) throws JSONException {
         List<TSunshine> days = new ArrayList<TSunshine>();
         for (int i = 0; i < jsonArray.length(); i++) {
-            days.add(getWeatherForDay(jsonArray.getJSONObject(i)));
+            days.add(new TSunshine(jsonArray.getJSONObject(i)));
         }
 
         return days.toArray(new TSunshine[0]);

@@ -15,6 +15,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -24,9 +25,20 @@ public class MainActivityFragment extends Fragment {
     public static final String TAG = "BP";
     LayoutInflater inflater;
     ArrayAdapter<String> arrAdapter;
+    List<TSunshine> daysData = new ArrayList<TSunshine>();
 
     public MainActivityFragment() {
         setHasOptionsMenu (true);
+    }
+
+    private void refresh() {
+        Log.d(TAG, "Refresh menu selected");
+        OpenMapConnection omConn = new OpenMapConnection();
+        Log.d("BP", "start connection");
+        Uri url = OpenWeatherAPIURL.getURL("1158", "hu");
+        //"http://api.openweathermap.org/data/2.5/forecast/city?id=524901"
+        omConn.start(getActivity(), arrAdapter, daysData, url);
+
     }
 
     @Override
@@ -35,12 +47,7 @@ public class MainActivityFragment extends Fragment {
 
         this.inflater = inflater;
 
-        String[] list = {
-                "Yesterday - Sunny 9/11 Sárika", "Today - Sunny 3/7  Sárika","Wed - Windy 5/11  Sárika",
-                "Thu - mmm 9/6", "Thu - mmm 9/6", "Thu - mmm 9/6", " Sárika",  "Sárika"
-        };
-
-        ArrayList<String> weekForecast = new ArrayList<String>(Arrays.asList(list));
+        final List<String> weekForecast = new ArrayList<String>();
 
         arrAdapter =
                 new ArrayAdapter(getActivity(),R.layout.list_item_forecast,
@@ -51,7 +58,9 @@ public class MainActivityFragment extends Fragment {
         ListView listView = (ListView)rootView.findViewById(R.id.listview_forecast);
 
         listView.setAdapter(arrAdapter);
-        listView.setOnItemClickListener(new MainListViewListener());
+        listView.setOnItemClickListener(new MainListViewListener(daysData));
+
+        refresh();
 
         return rootView;
     }
@@ -72,13 +81,7 @@ public class MainActivityFragment extends Fragment {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh)
         {
-            Log.d(TAG, "Refresh menu selected");
-            OpenMapConnection omConn = new OpenMapConnection();
-            Log.d("BP", "start connection");
-            Uri url = OpenWeatherAPIURL.getURL("1158", "hu");
-            //"http://api.openweathermap.org/data/2.5/forecast/city?id=524901"
-            omConn.start(getActivity(), arrAdapter, url);
-
+            refresh();
             return true;
         }
 
