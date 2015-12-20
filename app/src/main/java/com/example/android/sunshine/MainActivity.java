@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.json.JSONException;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -28,8 +30,6 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-
-
 
     }
 

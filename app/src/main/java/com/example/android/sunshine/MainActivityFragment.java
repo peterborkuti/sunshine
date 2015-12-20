@@ -23,6 +23,7 @@ public class MainActivityFragment extends Fragment {
 
     public static final String TAG = "BP";
     LayoutInflater inflater;
+    ArrayAdapter<String> arrAdapter;
 
     public MainActivityFragment() {
         setHasOptionsMenu (true);
@@ -33,6 +34,7 @@ public class MainActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         this.inflater = inflater;
+
         String[] list = {
                 "Yesterday - Sunny 9/11 Sárika", "Today - Sunny 3/7  Sárika","Wed - Windy 5/11  Sárika",
                 "Thu - mmm 9/6", "Thu - mmm 9/6", "Thu - mmm 9/6", " Sárika",  "Sárika"
@@ -40,7 +42,7 @@ public class MainActivityFragment extends Fragment {
 
         ArrayList<String> weekForecast = new ArrayList<String>(Arrays.asList(list));
 
-        ArrayAdapter arrAdapter =
+        arrAdapter =
                 new ArrayAdapter(getActivity(),R.layout.list_item_forecast,
                         R.id.list_item_forecast_textview, weekForecast);
 
@@ -49,6 +51,7 @@ public class MainActivityFragment extends Fragment {
         ListView listView = (ListView)rootView.findViewById(R.id.listview_forecast);
 
         listView.setAdapter(arrAdapter);
+        listView.setOnItemClickListener(new MainListViewListener());
 
         return rootView;
     }
@@ -74,7 +77,7 @@ public class MainActivityFragment extends Fragment {
             Log.d("BP", "start connection");
             Uri url = OpenWeatherAPIURL.getURL("1158", "hu");
             //"http://api.openweathermap.org/data/2.5/forecast/city?id=524901"
-            omConn.start(getActivity(), url);
+            omConn.start(getActivity(), arrAdapter, url);
 
             return true;
         }
