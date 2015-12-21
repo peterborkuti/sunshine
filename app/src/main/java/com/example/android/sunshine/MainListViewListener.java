@@ -1,6 +1,7 @@
 package com.example.android.sunshine;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -36,6 +37,10 @@ public class MainListViewListener implements AdapterView.OnItemClickListener {
 
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
+
+        Intent intent = new Intent(parent.getContext(), DetailActivity.class);
+        intent.putExtra(Intent.EXTRA_TEXT, text);
+        parent.getContext().startActivity(intent);
         Log.d("BP", "selected item:" + position + "," + id);
     }
 }
