@@ -10,4 +10,9 @@
         android:title="@string/action_refresh"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_viewlocation"
+        android:orderInCategory="100"
+        android:title="@string/action_view_location"
+        app:showAsAction="never" />
 </menu>

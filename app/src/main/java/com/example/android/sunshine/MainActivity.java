@@ -1,6 +1,7 @@
 package com.example.android.sunshine;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import org.json.JSONException;
 
@@ -49,6 +51,11 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Toast toast = Toast.makeText(this, "Settings was clicked", Toast.LENGTH_SHORT);
+            toast.show();
+            Intent intent = new Intent(this, SettingsActivity.class);
+            //intent.putExtra(Intent.EXTRA_TEXT, text);
+            startActivity(intent);
             return true;
         }
 

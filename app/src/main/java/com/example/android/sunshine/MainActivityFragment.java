@@ -1,6 +1,8 @@
 package com.example.android.sunshine;
 
+import android.content.Intent;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,11 +34,20 @@ public class MainActivityFragment extends Fragment {
         setHasOptionsMenu (true);
     }
 
+    private String getZip() {
+        String zip = PreferenceManager
+                .getDefaultSharedPreferences(getContext())
+                .getString(getString(R.string.pref_location_key),
+                        getString(R.string.pref_location_default));
+        return zip;
+    }
+
     private void refresh() {
         Log.d(TAG, "Refresh menu selected");
+
         OpenMapConnection omConn = new OpenMapConnection();
         Log.d("BP", "start connection");
-        Uri url = OpenWeatherAPIURL.getURL("1158", "hu");
+        Uri url = OpenWeatherAPIURL.getURL(getZip(), "hu");
         //"http://api.openweathermap.org/data/2.5/forecast/city?id=524901"
         omConn.start(getActivity(), arrAdapter, daysData, url);
 
@@ -85,7 +97,26 @@ public class MainActivityFragment extends Fragment {
             return true;
         }
 
+        if (id == R.id.action_viewlocation)
+        {
+            viewLocation();
+            return true;
+        }
+
         Log.d(TAG, "Other menu selected");
         return super.onOptionsItemSelected(item);
+    }
+
+    private void viewLocation() {
+        Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + getZip() +", Hungary");
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(mapIntent);
+        }
+        else {
+            Toast toast = Toast.makeText(getContext(), "Google Maps can not be started.", Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 }
